@@ -1,11 +1,12 @@
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session
 from lib.database_connection import get_flask_database_connection
 
 # Create a new Flask app
 app = Flask(__name__)
+app.secret_key = "dev-key"
 
-# == Your Routes Here ==
+# == Your Route's Here ==
 
 # GET /index
 # Returns the homepage
@@ -14,12 +15,6 @@ app = Flask(__name__)
 @app.route('/index', methods=['GET'])
 def get_index():
     return render_template('index.html')
-
-# These lines start the server if you run this file directly
-# They also start the server configured to use the test database
-# if started in test mode.
-if __name__ == '__main__':
-    app.run(debug=True, port=int(os.environ.get('PORT', 5001)))
 
 ## Login route including validation steps
 
@@ -36,7 +31,14 @@ def login():
     rows = connection.execute("SELECT * FROM users WHERE email = %s AND password_hash = %s", [email, password])
 
     if len(rows) > 0:
+        user_id = rows[0]["id"]
+        session["id"] = user_id
         return render_template("test_listings.html"), 200
     else:
         return "Error: Invalid username or password", 401
- 
+
+# These lines start the server if you run this file directly
+# They also start the server configured to use the test database
+# if started in test mode.
+if __name__ == '__main__':
+    app.run(debug=True, port=int(os.environ.get('PORT', 5001)))
