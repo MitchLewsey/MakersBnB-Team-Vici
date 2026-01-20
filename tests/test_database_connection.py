@@ -9,7 +9,7 @@ def test_database_connection(db_connection):
     db_connection.seed("seeds/users_seeds.sql")
 
     # # Insert a new record
-    # db_connection.execute("INSERT INTO users (name, email, password_hash) VALUES (%s)", ["Allen Iverson", "allen@iverson.com", "allen123"])
+    db_connection.execute("INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)", ["Allen Iverson", "allen@iverson.com", "allen123"])
 
     # Retrieve all records
     result = db_connection.execute("SELECT * FROM users")
@@ -20,6 +20,6 @@ def test_database_connection(db_connection):
         {"id": 2, "name": "Sam Jones", "email": "sam@jones.com", "password_hash": "sam123" },
         {"id": 3, "name": "Matthew Wiggans", "email": "matthew@wiggans.com", "password_hash": "matthew123" },
         {"id": 4, "name": "Dani Rojas", "email": "dani@rojas.com", "password_hash": "dani123" },
-        # {"id": 5, "name": "Allen Iverson", "email": "allen@iverson.com", "password_hash": "allen123" }
+        {"id": 5, "name": "Allen Iverson", "email": "allen@iverson.com", "password_hash": "allen123" }
 
     ]
