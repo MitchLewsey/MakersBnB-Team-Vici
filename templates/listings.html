@@ -9,7 +9,7 @@
         {% for listing in listings %}
         <p>
             Owner_ID: {{listings.owner_id}}<br>
-            Title: {{listings.title}}<br>
+            <a href="/listing/{{listings.id}}"></a>Title: {{listings.title}}<br>
             Price per Night: {{listings.price_per_night}}<br>
             County: {{listings.county}}<br>
             Description: {{listings.listing_description}}<br>
