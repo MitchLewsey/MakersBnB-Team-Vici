@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MakersBnB - Listings</title>
+        <link rel="stylesheet" href="/static/style.css" >
+    </head>
+    <body>
+        <div>
+        {% for album in albums %}
+        <p>
+            Owner_ID: {{listings.owner_id}}<br>
+            Title: {{listings.title}}<br>
+            Price per Night: {{listings.price_per_night}}<br>
+            County: {{listings.county}}<br>
+            Description: {{listings.listing_description}}<br>
+            Image: {{listings.img_url}}<br>
+        </p>
+        {% endfor %}
+        </div>
+    <p>
+      <a href="index">Homepage</a>
+    </p>
+    </body>
+</html>
