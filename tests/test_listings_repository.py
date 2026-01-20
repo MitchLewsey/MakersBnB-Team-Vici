@@ -1,3 +1,4 @@
+from lib.listing import Listing
 from playwright.sync_api import Page, expect
 
 
