@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, render_template
 from lib.database_connection import get_flask_database_connection
+from lib.listing_repository import *
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -19,11 +20,22 @@ def get_index():
 
 @app.route('/listings', methods=['GET'])
 def get_all_listings():
-    return render_template('listings.html')
+    connection = get_flask_database_connection(app)
+    listings_repo = ListingRepository(connection)
+    listings = listings_repo.all()
+    listings_string = [f"{listing}" for listing in listings]
+    return "\n".join(listings_string)
+    
+
+#    return render_template('listings/index.html')
 
 @app.route('/listings/<id>', methods=['GET'])
 def get_single_listing(id):
-    return render_template('listings_details.html')
+    connection = get_flask_database_connection(app)
+    listings_repo = ListingRepository(connection)
+    single_listing = listings_repo.find(id)
+    return f"{single_listing}"
+#    return render_template('listings_details.html')
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
