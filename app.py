@@ -25,15 +25,17 @@ if __name__ == '__main__':
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form['username']
+    
+    email = request.form['email']
     password = request.form['password']
 
-    if not username or not password:
+    if not email or not password:
         return "Missing username or password", 400
+    
+    connection = get_flask_database_connection(app)
+    rows = connection.execute("SELECT * FROM users WHERE email = %s AND password_hash = %s", [email, password])
 
-    rows = "SELECT * FROM users WHERE email = %s AND password_hash = %s"
-
-    if rows:
-        return render_template("listings.html"), 200
+    if len(rows) > 0:
+        return render_template("test_listings.html"), 200
     else:
         return "Error: Invalid username or password", 401
