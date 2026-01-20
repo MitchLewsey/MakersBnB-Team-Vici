@@ -8,8 +8,6 @@ def test_login_success(web_client, db_connection):
         'password': 'fred123'
     })
     assert response.status_code == 200
-    with web_client.session_transaction() as sess:
-        assert sess["id"] == 1  # or whatever the user ID is in your seed file
 
 def test_invalid_credentials(web_client, db_connection):
     db_connection.seed("seeds/users_seeds.sql")

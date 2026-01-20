@@ -4,7 +4,6 @@ from lib.database_connection import get_flask_database_connection
 
 # Create a new Flask app
 app = Flask(__name__)
-app.secret_key = "dev-key"
 
 # == Your Route's Here ==
 
@@ -31,8 +30,6 @@ def login():
     rows = connection.execute("SELECT * FROM users WHERE email = %s AND password_hash = %s", [email, password])
 
     if len(rows) > 0:
-        user_id = rows[0]["id"]
-        session["id"] = user_id
         return render_template("test_listings.html"), 200
     else:
         return "Error: Invalid username or password", 401
