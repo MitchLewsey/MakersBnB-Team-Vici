@@ -31,7 +31,7 @@ def login():
     if not username or not password:
         return "Missing username or password", 400
 
-    rows = "SELECT * FROM users WHERE username = %s AND password = %s"
+    rows = "SELECT * FROM users WHERE email = %s AND password_hash = %s"
 
     if rows:
         return render_template("listings.html"), 200
