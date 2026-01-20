@@ -6,7 +6,7 @@ I get bookings back
 """
 def test_database_connection(db_connection):
     # Seed the database with some test data
-    db_connection.seed("seeds/bookings_directory.sql")
+    db_connection.seed("seeds/bookings_seeds.sql")
 
     # # Insert a new record
     # db_connection.execute("INSERT INTO booking (name) VALUES (%s)", ["second_record"])
