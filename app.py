@@ -20,3 +20,20 @@ def get_index():
 # if started in test mode.
 if __name__ == '__main__':
     app.run(debug=True, port=int(os.environ.get('PORT', 5001)))
+
+## Login route
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+    if not username or not password:
+        return "Missing username or password", 400
+
+    rows = "SELECT * FROM users WHERE username = %s AND password = %s"
+
+    if rows:
+        return render_template("listings.html"), 200
+    else:
+        return "Error: Invalid username or password", 401
