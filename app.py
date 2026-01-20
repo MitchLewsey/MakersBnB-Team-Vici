@@ -21,7 +21,7 @@ def get_index():
 if __name__ == '__main__':
     app.run(debug=True, port=int(os.environ.get('PORT', 5001)))
 
-## Login route
+## Login route including validation steps
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -39,3 +39,4 @@ def login():
         return render_template("test_listings.html"), 200
     else:
         return "Error: Invalid username or password", 401
+ 
