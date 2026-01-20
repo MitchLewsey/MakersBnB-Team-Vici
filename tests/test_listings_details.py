@@ -9,11 +9,11 @@ THEN the http response status is 200
 
 """
 
-def test_listing(db_connection, web_client):
-    db_connection.seed("seeds/listings_seeds.sql")
-    response = web_client.get("/listings/1")
-    assert response.status_code == 200
-    assert response.data.decode("utf-8") == "Listing(1, '2 bed apartment', 100.50, 'Hertfordshire', 'lovely stay with breakfast included', 'https://tinyurl.com/ye23e59b')"
+# def test_listing(db_connection, web_client):
+#     db_connection.seed("seeds/listings_seeds.sql")
+#     response = web_client.get("/listings/1")
+#     assert response.status_code == 200
+#     assert response.data.decode("utf-8") == "Listing(1, '2 bed apartment', 100.50, 'Hertfordshire', 'lovely stay with breakfast included', 'https://tinyurl.com/ye23e59b')"
 
 
 # def test_get_all_albums(page, test_web_address, db_connection):

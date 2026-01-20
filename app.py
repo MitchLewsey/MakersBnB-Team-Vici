@@ -17,9 +17,13 @@ def get_index():
 
 #listings 
 
-@app.route('/listings/<id>', methods=['GET'])
-def get_listings(id):
+@app.route('/listings', methods=['GET'])
+def get_all_listings():
     return render_template('listings.html')
+
+@app.route('/listings/<id>', methods=['GET'])
+def get_single_listing(id):
+    return render_template('listings_details.html')
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
