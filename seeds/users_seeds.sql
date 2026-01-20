@@ -22,4 +22,4 @@ INSERT INTO users (name, email, password_hash) VALUES
 ('Fred Smith', 'fred@smith.com', 'fred123'),
 ('Sam Jones', 'sam@jones.com', 'sam123'),
 ('Matthew Wiggans', 'matthew@wiggans.com', 'matthew123'),
-('Dani Rojas', 'dani@rojas.com', 'rojas123');
+('Dani Rojas', 'dani@rojas.com', 'dani123');
