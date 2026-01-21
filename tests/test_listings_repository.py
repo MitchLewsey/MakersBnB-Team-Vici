@@ -7,7 +7,7 @@ def test_listings_all(db_connection):
     listings_repo = ListingRepository(db_connection)
 
     all_listings = listings_repo.all()
-    assert all_listings == [Listing(1, 1, '2 bed apartment', 100.50, 'Hertfordshire', 'lovely stay with breakfast included', 'https://tinyurl.com/ye23e59b'), Listing(2, 2, '15 bed castle', 3000, 'Edinburgh', 'huge castle, tennis courts', 'https://tinyurl.com/mpm6dnam')]
+    assert all_listings == [Listing(1, 1, '2 bed apartment', 100.50, 'Hertfordshire', 'lovely stay with breakfast included', 'https://tinyurl.com/ye23e59b'), Listing(2, 2, '15 bed castle', 3000, 'Edinburgh', 'huge castle, tennis courts', 'https://tinyurl.com/mpm6dnam'), Listing(3, 3, '40 bed castle', 3000, 'Edinburgh', 'huge castle, tennis courts', 'https://tinyurl.com/mpm6dnam')]
 
 def test_find_listing(db_connection):
     db_connection.seed("seeds/listings_seeds.sql")
