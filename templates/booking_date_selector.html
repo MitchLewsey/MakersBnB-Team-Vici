@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MakersBnB - Booking Date</title>
+        <link rel="stylesheet" href="/static/style.css" >
+        <style>
+        body { font-family: sans-serif; margin: 40px; }
+        .booking-container { max-width: 400px; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background-color: #ff5a5f; color: white; border: none; padding: 10px 15px; width: 100%; cursor: pointer; font-size: 16px; border-radius: 4px; }
+    </style>
+    </head>
+
+    <body>
+        <h2>Request to book: {{ listing.title }}</h2>
+            <p>Location: {{ listing.county }}</p>
+            <p>Price per night: £{{ listing.price_per_night }}</p>
+
+            <div class="booking-container">
+                <form action="/bookings" method="POST">
+                    
+                    <input type="hidden" name="listing_id" value="{{ listing.id }}">
+
+                    <div class="form-group">
+                        <label for="start_date">Check-in Date:</label>
+                        <input type="date" id="start_date" name="start_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end_date">Check-out Date:</label>
+                        <input type="date" id="end_date" name="end_date" required>
+                    </div>
+
+                    <button type="submit">Confirm Booking Request</button>
+                </form>
+            </div>
+    </body>
+</html>
