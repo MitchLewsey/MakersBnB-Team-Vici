@@ -24,9 +24,9 @@ Get listing by ID returns only the given list
 def test_get_listing_by_id(db_connection, page, test_web_address):
     db_connection.seed("seeds/listings_seeds.sql")
     page.goto(f"http://{test_web_address}/listings")
-    page.click("text='2 bed apartments'")
-    h1_tags = page.locator("h1")
-    expect(h1_tags).to_have_text("2 bed apartment")
+    page.click("text='2 bed apartment'")
+    h2_tags = page.locator("h2")
+    expect(h2_tags).to_have_text("2 bed apartment")
     div_tags = page.locator("div")
     expect(div_tags).to_have_text([
         "Price per night: 100.50 County: Hertfordshire About this MakersBnB: lovely stay with breakfast included"

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, abort
 from lib.database_connection import get_flask_database_connection
 from lib.listing_repository import *
 
@@ -29,9 +29,12 @@ def get_all_listings():
 def get_single_listing(id):
     connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
-    single_listing = listings_repo.find(id)
-    return f"{single_listing}"
-#    return render_template('listings_details.html')
+    listing = listings_repo.find(id)
+    if listing is None:
+        return "Sorry, that listing does not exist.", 404
+    else: 
+    # # return f"{single_listing}"
+        return render_template('listings_details.html', listing=listing)
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
