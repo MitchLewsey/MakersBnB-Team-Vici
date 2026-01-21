@@ -31,3 +31,26 @@ class BookingRepository():
                             row['checkout_date'],
                             row['booking_price']
                             )
+    
+    def create(self, booking):
+        rows = self._connection.execute(
+            """
+            INSERT INTO bookings
+            (guest_id, listing_id, start_date, end_date, checkout_date, booking_price)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id
+            """,
+            [
+                booking.guest_id,
+                booking.listing_id,
+                booking.start_date, 
+                booking.end_date,      
+                booking.checkout_date, 
+                booking.price          
+            ]
+            )
+
+        row = rows[0]
+        booking.id = row["id"]
+        return booking
+
