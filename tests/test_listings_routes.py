@@ -10,12 +10,14 @@ def test_get_listings(db_connection, page, test_web_address):
     div_tags = page.locator("div")
     expect(div_tags).to_have_text([
         "Price per night: 100.50 County: Hertfordshire About this MakersBnB: lovely stay with breakfast included",
+        "Price per night: 3000 County: Edinburgh About this MakersBnB: huge castle, tennis courts",
         "Price per night: 3000 County: Edinburgh About this MakersBnB: huge castle, tennis courts"
     ])
     title_tags = page.locator("h2")
     expect(title_tags).to_have_text([
         "2 bed apartment",
-        "15 bed castle"
+        "15 bed castle",
+        "40 bed castle"
     ])
     expect(page.get_by_alt_text("An image of the MakersBNB"))
 """
