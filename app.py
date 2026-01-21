@@ -17,11 +17,15 @@ def get_index():
 
 ## Login route including validation steps
 
+@app.route('/login', methods=['GET'])
+def login_page():
+    return render_template('login.html')
+
 @app.route('/login', methods=['POST'])
 def login():
     
     email = request.form['email']
-    password = request.form['password']
+    password = request.aform['password']
 
     if not email or not password:
         return "Missing username or password", 400
