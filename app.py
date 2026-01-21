@@ -42,6 +42,11 @@ def login():
     else:
         return "Error: Invalid username or password", 401
     
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect("/login")
+
 @app.route('/hostings', methods=['GET'])
 def hostings():
     user_id = session.get("user_id")
