@@ -22,4 +22,5 @@ CREATE TABLE listings (
 -- Finally, we add any records that are needed for the tests to run
 INSERT INTO listings (owner_id, title, price_per_night, county, listing_description, img_url) VALUES 
 (1, '2 bed apartment', 100.50, 'Hertfordshire', 'lovely stay with breakfast included', 'https://tinyurl.com/ye23e59b'),
-(2, '15 bed castle', 3000, 'Edinburgh', 'huge castle, tennis courts', 'https://tinyurl.com/mpm6dnam');
+(2, '15 bed castle', 3000, 'Edinburgh', 'huge castle, tennis courts', 'https://tinyurl.com/mpm6dnam'),
+(3, '40 bed castle', 3000, 'Edinburgh', 'huge castle, tennis courts', 'https://tinyurl.com/mpm6dnam');
