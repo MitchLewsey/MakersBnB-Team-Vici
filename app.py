@@ -36,21 +36,20 @@ def login():
     
 
 @app.route('/book', methods=['POST'])
-def request_booking():
-    listing_id = request.form.get('listing_id')
-    start_date = request.form.get('start_date')
-    end_date = request.form.get('end_date')
+def book_listing():
+    guest_id = request.form['guest_id']
+    listing_id = request.form['listing_id']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    checkout_date = request.form['checkout_date']
+    booking_price = request.form['booking_price']
 
-    if not listing_id or not start_date or not end_date:
-        return "Error: missing or invalid date. Please select a valid date.", 405
-    
+# To be reviewed - needs to test from repository class
     connection = get_flask_database_connection(app)
-
     connection.execute(
-        "INSERT INTO bookings (listing_id, start_date, end_date) VALUES (%s, %s, %s)",
-        [listing_id, start_date, end_date]
+        "INSERT INTO bookings (guest_id, listing_id, start_date, end_date, checkout_date, booking_price) VALUES (%s, %s, %s, %s, %s, %s)",
+        [guest_id, listing_id, start_date, end_date, checkout_date, booking_price]
     )
-
     return "Your booking request has been submitted successfully.", 200
 
 
