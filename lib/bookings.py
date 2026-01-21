@@ -9,4 +9,4 @@ class Bookings():
         self.price = price
 
     def __eq__(self, value):
-        return self.__dict__ == value.__dict__ 
+        return self.__dict__ == value.__dict__
