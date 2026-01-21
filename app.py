@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, redirect
 from lib.database_connection import get_flask_database_connection
 from lib.listing_repository import *
 
@@ -16,8 +16,10 @@ app = Flask(__name__)
 def get_index():
     return render_template('index.html')
 
-#listings 
+## Listings Routes
 
+# GET /listings
+# Returns the listings index
 @app.route('/listings', methods=['GET'])
 def get_all_listings():
     connection = get_flask_database_connection(app)
@@ -25,6 +27,8 @@ def get_all_listings():
     listings = listings_repo.all()
     return render_template('listings/index.html', listings=listings)
 
+# GET /listings/<id>
+# Returns the listing details page for that listing id
 @app.route('/listings/<id>', methods=['GET'])
 def get_single_listing(id):
     connection = get_flask_database_connection(app)
@@ -33,8 +37,43 @@ def get_single_listing(id):
     if listing is None:
         return "Sorry, that listing does not exist.", 404
     else: 
-    # # return f"{single_listing}"
-        return render_template('listings_details.html', listing=listing)
+        return render_template('listings/show.html', listing=listing)
+    
+# GET listings/new
+# Returns the new listings page
+@app.route('/listings/new', methods=['GET'])
+def get_new_listing():
+    return render_template('listings/new.html')
+
+    
+# POST /listings/new
+# Creates listing and redirects to listings/<id> for the new listing
+@app.route('/listings/new', methods=['POST'])
+def create_listing():
+    connection = get_flask_database_connection(app)
+    listings_repo = ListingRepository(connection)
+
+    # set the listing params
+    owner_id = request.form["owner_id"]
+    title = request.form["title"]
+    price_per_night = request.form["price_per_night"]
+    county = request.form["county"]
+    listing_description = request.form["listing_description"]
+    img_url = request.form["img_url"]
+
+    # create the listing object and pass into #create method 
+    listing = Listing(None, owner_id, title, price_per_night, county, listing_description, img_url)
+    listings_repo.create(listing)
+
+    return redirect(f"/listings/{listing.id}")
+
+
+
+
+
+
+
+
 ## Login route including validation steps
 
 @app.route('/login', methods=['POST'])

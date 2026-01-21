@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add a Listing</title>
+
+        <!--
+            Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
+            If you're wondering how the CSS file below is being loaded.
+        -->
+        <link rel="stylesheet" href="/static/style.css" >
+    </head>
+    <body>
+        <h1>Add a Listing</h1>
+        <form action="/listings/new" method="POST">
+            <input type="text" name="owner_id">
+            <input type="text" name="title">
+            <input type="number" name="price_per_night">
+            <input type="text" name="county">
+            <input type="text" name="listing_description">
+            <input type="text" name="img_url">
+            <input type="submit" value="Submit Listing">
+        </form>
+    </body>
+</html>
+

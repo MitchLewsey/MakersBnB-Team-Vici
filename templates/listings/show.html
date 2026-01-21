@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <title>MakersBnB Listings</title>
+        <title>MakersBnB</title>
+
         <!--
             Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
             If you're wondering how the CSS file below is being loaded.
@@ -9,11 +10,10 @@
         <link rel="stylesheet" href="/static/style.css" >
     </head>
     <body>
-        <h1>Listings</h1>
-        <a href="/listings/new">Add Listing</a>
-    {% for listing in listings %}
+         <h1>Listing Details</h1>
+    
         <article>
-            <h2><a href="/listings/{{listing.id}}">{{listing.title}}</a></h2>
+            <h2>{{listing.title}}</h2>
             <img id="listing main img" src="{{listing.img_url}}" alt="An image of the MakersBNB">
             <div>
                 Price per night: {{listing.price_per_night}}
@@ -21,6 +21,6 @@
                 About this MakersBnB: {{listing.listing_description}}
             </div>
         </article>
-    {% endfor %}
     </body>
 </html>
+
