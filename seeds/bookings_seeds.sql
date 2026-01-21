@@ -12,6 +12,7 @@ DROP SEQUENCE IF EXISTS bookings_id_seq;
 CREATE SEQUENCE IF NOT EXISTS bookings_id_seq;
 CREATE TABLE bookings (
 id SERIAL PRIMARY KEY,
+status TEXT DEFAULT 'Requested',
 guest_id int,
 listing_id INT,
 start_date DATE,
@@ -28,10 +29,10 @@ REFERENCES listings(id)
 
 -- Finally, we add any records that are needed for the tests to run
 INSERT INTO bookings 
-(guest_id, listing_id, start_date, end_date, checkout_date, booking_price) 
+(status, guest_id, listing_id, start_date, end_date, checkout_date, booking_price) 
 VALUES 
-(1, 3, '2026-01-20', '2026-01-21', '2026-01-20', 50.00), 
-(2, 2, '2026-01-28', '2026-01-29', '2026-01-15', 77.00),
-(3, 1, '2026-02-10', '2026-02-11', '2026-01-18', 100.00),
-(1, 3, '2026-01-25', '2026-01-26', '2026-01-19', 50.00),
-(2, 3, '2026-01-21', '2026-01-22', '2026-01-20', 50.00);
+(DEFAULT,    1, 3, '2026-01-20', '2026-01-21', '2026-01-20', 50.00), 
+('Approved', 2, 2, '2026-01-28', '2026-01-29', '2026-01-15', 77.00),
+('Approved', 3, 1, '2026-02-10', '2026-02-11', '2026-01-18', 100.00),
+(DEFAULT,    1, 3, '2026-01-25', '2026-01-26', '2026-01-19', 50.00),
+(DEFAULT,    2, 3, '2026-01-21', '2026-01-22', '2026-01-20', 50.00);

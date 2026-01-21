@@ -1,6 +1,7 @@
 class Bookings():
-    def __init__(self,id,guest_id,listing_id,start_date,end_date,checkout_date,price): 
-        self.id = id 
+    def __init__(self,id,status,guest_id,listing_id,start_date,end_date,checkout_date,price): 
+        self.id = id
+        self.status = status
         self.guest_id = guest_id
         self.listing_id = listing_id
         self.start_date = start_date

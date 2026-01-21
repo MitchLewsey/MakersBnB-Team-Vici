@@ -10,6 +10,7 @@ class BookingRepository():
         bookings = []
         for row in bookings_table: 
             item = Bookings(row['id'],
+                            row['status'],
                             row['guest_id'],
                             row['listing_id'],
                             row['start_date'],
@@ -24,6 +25,7 @@ class BookingRepository():
         booking_rows = self._connection.execute('SELECT * FROM bookings WHERE id =%s', [booking_id])
         row = booking_rows[0]
         return Bookings(row['id'],
+                        row['status'],
                             row['guest_id'],
                             row['listing_id'],
                             row['start_date'],
@@ -62,11 +64,12 @@ class BookingRepository():
         rows = self._connection.execute(
             """
             INSERT INTO bookings
-            (guest_id, listing_id, start_date, end_date, checkout_date, booking_price)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            (status,guest_id, listing_id, start_date, end_date, checkout_date, booking_price)
+            VALUES (%s, %s, %s, %s, %s, %s,%s)
             RETURNING id
             """,
             [
+                booking.status,
                 booking.guest_id,
                 booking.listing_id,
                 booking.start_date, 
