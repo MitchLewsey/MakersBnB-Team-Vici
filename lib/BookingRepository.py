@@ -34,6 +34,32 @@ class BookingRepository():
                             row['booking_price']
                             )
     
+    def hostings_for_host(self, owner_id):
+        return self._connection.execute(
+            """
+            SELECT
+            b.id AS booking_id,
+            b.start_date,
+            b.end_date,
+            b.checkout_date,
+            b.booking_price,
+            l.id AS listing_id,
+            l.title AS listing_title,
+            l.county AS listing_county,
+            l.img_url AS listing_img_url,            
+            u.id AS guest_id,
+            u.name AS guest_name,
+            u.email AS guest_email
+            FROM bookings b
+            JOIN listings l ON l.id = b.listing_id
+            JOIN users u ON u.id = b.guest_id
+            WHERE l.owner_id = %s
+            ORDER BY b.id;
+            """,
+            [owner_id]
+        )
+
+    
     def create(self, booking):
         rows = self._connection.execute(
             """
@@ -56,4 +82,3 @@ class BookingRepository():
         row = rows[0]
         booking.id = row["id"]
         return booking
-

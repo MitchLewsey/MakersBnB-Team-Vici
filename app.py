@@ -1,11 +1,13 @@
 import os
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, redirect
 from lib.database_connection import get_flask_database_connection
+from lib.BookingRepository import BookingRepository
 from lib.listing_repository import *
 
 # Create a new Flask app
 app = Flask(__name__)
 
+app.secret_key = "dev-secret-change-me"
 # == Your Route's Here ==
 
 # GET /index
@@ -37,6 +39,10 @@ def get_single_listing(id):
         return render_template('listings_details.html', listing=listing)
 ## Login route including validation steps
 
+@app.route('/login', methods=['GET'])
+def login_page():
+    return render_template('login.html')
+
 @app.route('/login', methods=['POST'])
 def login():
     
@@ -47,12 +53,34 @@ def login():
         return "Missing username or password", 400
     
     connection = get_flask_database_connection(app)
-    rows = connection.execute("SELECT * FROM users WHERE email = %s AND password_hash = %s", [email, password])
+    rows = connection.execute("SELECT id FROM users WHERE email = %s AND password_hash = %s", [email, password])
 
     if len(rows) > 0:
+        user_id = rows[0]["id"]
+        session["user_id"] = user_id
         return render_template("test_listings.html"), 200
     else:
         return "Error: Invalid username or password", 401
+    
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect("/login")
+
+@app.route('/hostings', methods=['GET'])
+def hostings():
+    user_id = session.get("user_id")
+    
+    if not user_id:
+        return redirect("/login")
+
+    connection = get_flask_database_connection(app)
+    booking_repo = BookingRepository(connection)
+
+    hostings = booking_repo.hostings_for_host(user_id)
+
+    return render_template("hostings.html", hostings = hostings), 200
+
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
