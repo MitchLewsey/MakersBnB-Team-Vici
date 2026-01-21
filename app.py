@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, render_template, session
 from lib.database_connection import get_flask_database_connection
 from lib.listing_repository import *
+from lib.BookingRepository import *
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -53,6 +54,34 @@ def login():
         return render_template("test_listings.html"), 200
     else:
         return "Error: Invalid username or password", 401
+
+@app.route('/book', methods=['POST'])
+def request_a_booking():
+    guest_id = request.form['guest_id']
+    listing_id = request.form['listing_id']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    checkout_date = request.form['checkout_date']
+    booking_price = request.form['booking_price']
+
+    booking = Bookings (
+        None,
+        'Requested',
+        guest_id,
+        listing_id,
+        start_date,
+        end_date,
+        checkout_date,
+        booking_price,
+    )
+
+    connection = get_flask_database_connection(app)
+    booking_repo = BookingRepository(connection)
+
+    booking_repo.create(booking)
+
+    return "Your booking request has been submitted successfully.", 200
+
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
