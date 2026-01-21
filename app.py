@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, render_template, session
 from lib.database_connection import get_flask_database_connection
+from lib.listing_repository import *
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -15,6 +16,25 @@ app = Flask(__name__)
 def get_index():
     return render_template('index.html')
 
+#listings 
+
+@app.route('/listings', methods=['GET'])
+def get_all_listings():
+    connection = get_flask_database_connection(app)
+    listings_repo = ListingRepository(connection)
+    listings = listings_repo.all()
+    return render_template('listings/index.html', listings=listings)
+
+@app.route('/listings/<id>', methods=['GET'])
+def get_single_listing(id):
+    connection = get_flask_database_connection(app)
+    listings_repo = ListingRepository(connection)
+    listing = listings_repo.find(id)
+    if listing is None:
+        return "Sorry, that listing does not exist.", 404
+    else: 
+    # # return f"{single_listing}"
+        return render_template('listings_details.html', listing=listing)
 ## Login route including validation steps
 
 @app.route('/login', methods=['POST'])
