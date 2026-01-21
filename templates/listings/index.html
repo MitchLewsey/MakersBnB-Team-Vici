@@ -12,7 +12,7 @@
         <h1>Listings</h1>
     {% for listing in listings %}
         <article>
-            <h2>{{listing.title}}</h2>
+            <h2><a href="/listings/{{listing.id}}">{{listing.title}}</a></h2>
             <img id="listing main img" src="{{listing.img_url}}" alt="An image of the MakersBNB">
             <div>
                 Price per night: {{listing.price_per_night}}

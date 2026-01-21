@@ -21,7 +21,7 @@ def test_get_listings(db_connection, page, test_web_address):
 """
 Get listing by ID returns only the given list
 """
-def test_get_listing_by_id(db_connection, page, test_web_addres):
+def test_get_listing_by_id(db_connection, page, test_web_address):
     db_connection.seed("seeds/listings_seeds.sql")
     page.goto(f"http://{test_web_address}/listings")
     page.click("text='2 bed apartments'")
