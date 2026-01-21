@@ -23,11 +23,7 @@ def get_all_listings():
     connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
     listings = listings_repo.all()
-    listings_string = [f"{listing}" for listing in listings]
-    return "\n".join(listings_string)
-    
-
-#    return render_template('listings/index.html')
+    return render_template('listings/index.html', listings=listings)
 
 @app.route('/listings/<id>', methods=['GET'])
 def get_single_listing(id):
