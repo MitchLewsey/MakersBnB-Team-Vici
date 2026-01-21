@@ -5,6 +5,7 @@ from lib.database_connection import get_flask_database_connection
 # Create a new Flask app
 app = Flask(__name__)
 
+app.secret_key = "dev-secret-change-me"
 # == Your Route's Here ==
 
 # GET /index
@@ -25,15 +26,17 @@ def login_page():
 def login():
     
     email = request.form['email']
-    password = request.aform['password']
+    password = request.form['password']
 
     if not email or not password:
         return "Missing username or password", 400
     
     connection = get_flask_database_connection(app)
-    rows = connection.execute("SELECT * FROM users WHERE email = %s AND password_hash = %s", [email, password])
+    rows = connection.execute("SELECT id FROM users WHERE email = %s AND password_hash = %s", [email, password])
 
     if len(rows) > 0:
+        user_id = rows[0]["id"]
+        session["user_id"] = user_id
         return render_template("test_listings.html"), 200
     else:
         return "Error: Invalid username or password", 401
