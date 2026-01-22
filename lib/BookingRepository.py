@@ -82,3 +82,22 @@ class BookingRepository():
         row = rows[0]
         booking.id = row["id"]
         return booking
+    
+    def find_by_guest_id(self, guest_id):
+        bookings_table = self._connection.execute(""" SELECT
+            l.title,
+            l.img_url,
+            l.listing_description,
+            l.county,
+            b.id,
+            b.guest_id,
+            b.start_date,
+            b.end_date,
+            b.checkout_date,
+            b.booking_price
+            FROM bookings AS b
+            JOIN listings AS l ON b.listing_id = l.id
+            WHERE b.guest_id = %s
+            ORDER by b.id;      
+        """,[guest_id])
+        return bookings_table
