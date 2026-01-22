@@ -191,6 +191,22 @@ def request_a_booking():
 
     return "Your booking request has been submitted successfully.", 200
 
+# GET bookings/<id>
+# Returns the booking details page for that booking id
+@app.route('/bookings/<int:id>', methods=['GET'])
+def get_single_booking_id(id):
+    connection = get_flask_database_connection(app)
+    bookings_repo = BookingRepository(connection)
+    booking = bookings_repo.find_by_id(id)
+    if booking is None:
+        return "Sorry, that booking does not exist.", 404
+    else: 
+        return render_template('bookings/show_booking.html', booking=booking)
+    
+@app.route("/booking_confirmation", methods=["GET"])
+def booking_confirmation():
+    return render_template("bookings/booking_confirmation.html"), 200
+
 @app.get('/book')
 def select_booking_dates():
     listing_id = request.args.get('id')

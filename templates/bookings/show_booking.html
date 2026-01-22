@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <title>MakersBnB Booking Confirmation</title>
+        <title>MakersBnB</title>
+
         <!--
             Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
             If you're wondering how the CSS file below is being loaded.
@@ -9,9 +10,14 @@
         <link rel="stylesheet" href="/static/style.css" >
     </head>
     <body>
-        <p>
-            Your booking request has been successful
-        </p>
-        
+         <h1>Booking Details</h1>
+    
+        <article>
+            <h2>{{booking.title}}</h2>
+            <img id="listing main img" src="{{booking.img_url}}" alt="An image of the MakersBNB">
+            <div>
+                
+            </div>
+        </article>
     </body>
 </html>
