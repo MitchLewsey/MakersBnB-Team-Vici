@@ -185,7 +185,7 @@ def get_all_my_bookings():
     return render_template('bookings.html', bookings = bookings), 200
 
 
-@app.route('/book', methods=['POST'])
+@app.route('/bookings', methods=['POST'])
 def request_a_booking():
     if "user_id" not in session:
         return redirect("/login")

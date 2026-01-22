@@ -101,3 +101,15 @@ class BookingRepository():
             ORDER by b.id;      
         """,[guest_id])
         return bookings_table
+    
+    def unavailable_ranges_for_listing(self, listing_id):
+        rows = self._connection.execute(
+            """
+            SELECT start_date, end_date
+            FROM bookings
+            WHERE listing_id = %s
+            ORDER BY start_date;
+            """,
+            [listing_id]
+        )
+        return rows
