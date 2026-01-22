@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}Listing{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,17 +15,26 @@
         <link rel="stylesheet" href="/static/style.css" >
     </head>
     <body>
-         <h1>Listing Details</h1>
-    
+        <div class="flex items-end justify-between mb-6">
+            <div>
+            <h1 class="text-2xl font-bold">Listing Details</h1>
+            </div>
+        </div>
         <article>
-            <h2>{{listing.title}}</h2>
+            <h2 class="text-gray-900 font-bold">{{listing.title}}</h2>
+            <br>
             <img id="listing main img" src="{{listing.img_url}}" alt="An image of the MakersBNB">
             <div>
-                Price per night: {{listing.price_per_night}}
-                County: {{listing.county}}
-                About this MakersBnB: {{listing.listing_description}}
+                <b>Price per night: </b>£{{listing.price_per_night}}
             </div>
+            <div>
+                <b>County: </b>{{listing.county}}
+            </div>
+            <div>
+                <b>About this MakersBnB: </b>{{listing.listing_description}}
+            </div>
+        </div>
         </article>
     </body>
 </html>
-
+{% endblock %}
