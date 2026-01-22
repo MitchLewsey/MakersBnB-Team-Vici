@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Listings{% endblock %}
+
+{% block content %}
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,9 +22,12 @@
             </div> 
         
         {% if bookings|length == 0 %}
-        <div> 
-            <p> You have made no bookings. <a href="/listings">Browse Listings</a></p>
-        </div>
+        <div class="text-center py-16">
+  <p class="text-gray-700 text-lg mb-4">You have made no bookings.</p>
+  <a href="/listings" class="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition duration-200">
+    Browse Listings
+  </a>
+</div>
         {% else %}
         {% for booking in bookings %}
         <div>
@@ -39,3 +48,4 @@
         {% endif %}
     </body>
 </html>
+{% endblock %}
