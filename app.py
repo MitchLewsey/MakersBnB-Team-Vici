@@ -1,9 +1,9 @@
 import os
 from flask import Flask, request, render_template, session, redirect
 from lib.database_connection import get_flask_database_connection
-from lib.BookingRepository import *
 from lib.listing_repository import *
 from lib.BookingRepository import *
+from lib.user_repository import *
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -70,17 +70,41 @@ def create_listing():
 
     return redirect(f"/listings/{listing.id}")
 
+## Sign up and Login route including validation steps
 
+@app.route("/signup", methods=["GET"])
+def signup_page():
+    if session.get("user_id"):
+        return redirect("/listings")
+    return render_template("signup.html")
 
+@app.route("/signup", methods=["POST"])
+def signup():
+    connection = get_flask_database_connection(app)
+    user_repo = UserRepository(connection)
 
+    name = request.form.get("name")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
+    if not name or not email or not password:
+        return "Missing fields", 400
 
+    if user_repo.find_by_email(email):
+        return "Email already exists", 400
 
+    user = User(None, name, email, password)
+    user = user_repo.create(user)
 
-## Login route including validation steps
+    session.clear()
+    session["user_id"] = user.id
+
+    return redirect("/listings")
 
 @app.route('/login', methods=['GET'])
 def login_page():
+    if session.get("user_id"):
+        return redirect("/listings")
     return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
@@ -98,7 +122,7 @@ def login():
     if len(rows) > 0:
         user_id = rows[0]["id"]
         session["user_id"] = user_id
-        return render_template("test_listings.html"), 200
+        return redirect("/listings")
     else:
         return "Error: Invalid username or password", 401
     
