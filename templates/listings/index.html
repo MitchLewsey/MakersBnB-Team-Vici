@@ -37,6 +37,10 @@
             <div>  
                 <b>About this MakersBnB:</b> {{listing.listing_description}}
             </div>
+               <div>
+            <a href="{{ url_for('select_booking_dates', id=listing.id) }}" class="btn">Book Here</a>
+            </div>
+            
         </article>
     {% endfor %}
     </body>

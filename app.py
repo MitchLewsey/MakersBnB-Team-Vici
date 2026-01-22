@@ -163,12 +163,14 @@ def get_all_my_bookings():
 
 @app.route('/book', methods=['POST'])
 def request_a_booking():
-    guest_id = request.form['guest_id']
+    guest_id = session.get("user_id")
     listing_id = request.form['listing_id']
     start_date = request.form['start_date']
     end_date = request.form['end_date']
-    checkout_date = request.form['checkout_date']
+    checkout_date = date(2026, 1, 22)
     booking_price = request.form['booking_price']
+
+    print(guest_id)
 
 #Add validation here - e.g. User inputs past date
 
@@ -189,6 +191,15 @@ def request_a_booking():
 
     return "Your booking request has been submitted successfully.", 200
 
+@app.get('/book')
+def select_booking_dates():
+    listing_id = request.args.get('id')
+    
+    connection = get_flask_database_connection(app)
+    listing_repo = ListingRepository(connection)
+    listing = listing_repo.find(listing_id) 
+
+    return render_template('booking_date_selector.html', listing = listing)
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
