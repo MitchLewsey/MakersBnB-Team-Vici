@@ -146,6 +146,21 @@ def hostings():
     return render_template("hostings.html", hostings = hostings), 200
 
 
+##Bookings Routes
+
+@app.route('/bookings', methods=['GET'])
+def get_all_my_bookings():
+    id = request.args.get('id')
+    
+    connection = get_flask_database_connection(app)
+    repository = BookingRepository(connection) 
+    
+    bookings = repository.find_by_guest_id(id)
+    
+    
+    return render_template('bookings.html', bookings = bookings), 200
+
+
 @app.route('/book', methods=['POST'])
 def request_a_booking():
     guest_id = request.form['guest_id']
