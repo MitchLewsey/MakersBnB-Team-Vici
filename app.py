@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, session, redirect
 from lib.database_connection import get_flask_database_connection
 from lib.BookingRepository import BookingRepository
 from lib.listing_repository import *
+from lib.BookingRepository import *
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -119,6 +120,35 @@ def hostings():
     hostings = booking_repo.hostings_for_host(user_id)
 
     return render_template("hostings.html", hostings = hostings), 200
+
+
+@app.route('/book', methods=['POST'])
+def request_a_booking():
+    guest_id = request.form['guest_id']
+    listing_id = request.form['listing_id']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    checkout_date = request.form['checkout_date']
+    booking_price = request.form['booking_price']
+
+#Add validation here - e.g. User inputs past date
+
+    booking = Bookings (
+        None,
+        'Requested',
+        guest_id,
+        listing_id,
+        start_date,
+        end_date,
+        checkout_date,
+        booking_price,
+    )
+
+    connection = get_flask_database_connection(app)
+    booking_repo = BookingRepository(connection)
+    booking_repo.create(booking)
+
+    return "Your booking request has been submitted successfully.", 200
 
 
 # These lines start the server if you run this file directly
