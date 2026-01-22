@@ -7,7 +7,7 @@ def test_login_success(web_client, db_connection):
         'email': 'fred@smith.com',
         'password': 'fred123'
     })
-    assert response.status_code == 200
+    assert response.status_code == 302
 
 def test_invalid_credentials(web_client, db_connection):
     db_connection.seed("seeds/users_seeds.sql")
