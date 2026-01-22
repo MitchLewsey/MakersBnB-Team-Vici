@@ -44,7 +44,8 @@ def get_single_listing(id):
     listings_repo = ListingRepository(connection)
     listing = listings_repo.find(id)
     if listing is None:
-        return "Sorry, that listing does not exist.", 404
+        return render_template('listings/error.html', listing=listing), 404        
+        # return "Sorry, that listing does not exist.", 404
     else: 
         return render_template('listings/show.html', listing=listing)
     
