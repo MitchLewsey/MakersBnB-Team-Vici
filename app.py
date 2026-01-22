@@ -1,14 +1,20 @@
 import os
+from datetime import date, datetime
 from flask import Flask, request, render_template, session, redirect
 from lib.database_connection import get_flask_database_connection
 from lib.listing_repository import *
 from lib.BookingRepository import *
+from lib.bookings import *
 from lib.user_repository import *
+
 
 # Create a new Flask app
 app = Flask(__name__)
 
 app.secret_key = "dev-secret-change-me"
+
+def _parse_date(value: str) -> date:
+    return datetime.strptime(value, "%Y-%m-%d").date()
 # == Your Route's Here ==
 
 # GET /index
@@ -131,6 +137,7 @@ def logout():
     session.clear()
     return redirect("/login")
 
+# GET page for all your listings that you own
 @app.route('/hostings', methods=['GET'])
 def hostings():
     user_id = session.get("user_id")
@@ -145,11 +152,28 @@ def hostings():
 
     return render_template("hostings.html", hostings = hostings), 200
 
+# checkout routes
+@app.route("/listings/<int:listing_id>/checkout", methods=["GET"])
+def checkout_page(listing_id):
+    if "user_id" not in session:
+        return redirect("/login")
 
-##Bookings Routes
+    connection = get_flask_database_connection(app)
+    listing_repo = ListingRepository(connection)
+
+    listing = listing_repo.find(listing_id)
+    if listing is None:
+        return "Listing not found", 404
+
+    return render_template("checkout.html", listing=listing), 200
+
+##Bookings Routes - shows you all the listings have booked
 
 @app.route('/bookings', methods=['GET'])
 def get_all_my_bookings():
+    if "user_id" not in session:
+        return redirect("/login")
+    
     id = request.args.get('id')
     
     connection = get_flask_database_connection(app)
@@ -163,12 +187,38 @@ def get_all_my_bookings():
 
 @app.route('/book', methods=['POST'])
 def request_a_booking():
-    guest_id = request.form['guest_id']
+    if "user_id" not in session:
+        return redirect("/login")
+    
+    guest_id = session["user_id"]
+
     listing_id = request.form['listing_id']
-    start_date = request.form['start_date']
-    end_date = request.form['end_date']
-    checkout_date = request.form['checkout_date']
-    booking_price = request.form['booking_price']
+    start_date_str = request.form['start_date']
+    end_date_str = request.form['end_date']
+
+    if not listing_id or not start_date_str or not end_date_str:
+        return "Missing fields", 400
+    
+    start_date = _parse_date(start_date_str)
+    end_date = _parse_date(end_date_str)
+    if end_date <= start_date:
+        return "End date must be after start date", 400
+    if start_date < date.today():
+        return "Start date cannot be in the past", 400
+    
+    checkout_date = date.today()
+
+    connection = get_flask_database_connection(app)
+
+    listing_repo = ListingRepository(connection)
+    listing = listing_repo.find(int(listing_id))
+
+    if listing is None:
+        return "Listing not found", 404
+
+    nights = (end_date - start_date).days
+    price_per_night = float(listing.price_per_night)
+    booking_price = round(price_per_night * nights, 2)
 
 #Add validation here - e.g. User inputs past date
 
@@ -176,18 +226,17 @@ def request_a_booking():
         None,
         'Requested',
         guest_id,
-        listing_id,
+        int(listing_id),
         start_date,
         end_date,
         checkout_date,
         booking_price,
     )
 
-    connection = get_flask_database_connection(app)
     booking_repo = BookingRepository(connection)
     booking_repo.create(booking)
 
-    return "Your booking request has been submitted successfully.", 200
+    return redirect("/bookings")
 
 
 # These lines start the server if you run this file directly
