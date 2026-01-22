@@ -34,6 +34,22 @@ class BookingRepository():
                             row['booking_price']
                             )
     
+    def find_by_guest_id(self, guest_id):
+        bookings_table = self._connection.execute('SELECT * FROM bookings WHERE guest_id =%s', [guest_id])
+        my_bookings=[]
+        for row in bookings_table: 
+            item = Bookings(row['id'],
+                            row['status'],
+                            row['guest_id'],
+                            row['listing_id'],
+                            row['start_date'],
+                            row['end_date'],
+                            row['checkout_date'],
+                            row['booking_price']
+                            )
+            my_bookings.append(item)
+        return my_bookings
+        
     def create(self, booking):
         rows = self._connection.execute(
             """

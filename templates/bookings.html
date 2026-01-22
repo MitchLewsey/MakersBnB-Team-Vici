@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MakersBnB</title>
+
+        <!--
+            Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
+            If you're wondering how the CSS file below is being loaded.
+        -->
+        <link rel="stylesheet" href="/static/style.css" >
+    </head>
+    <body>
+        <div> 
+            <h1>My Bookings</h1>
+            <p> All booking requests that you have made</p>
+            </div> 
+        
+        {% if bookings|length == 0 %}
+        <div> 
+            <p> You have made no bookings. <a href="/templates/listings.html">Browse Listings</a></p>
+        </div>
+        {% else %}
+        {% for booking in bookings %}
+        <div>
+            <div>
+                <h2>{{booking.listing.title}}</h2>
+                <img id="listing_img" src="{{listing.img_url}}" alt="Listing image">
+            </div> 
+            <div>
+                Order Id: {{booking.id}}
+                Total Fee: £{{booking.price}}
+                Address: {{booking.listing.county}}
+                About this MakersBnB: {{booking.listing.listing_description}}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </body>
+</html>
