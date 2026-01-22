@@ -167,8 +167,10 @@ def request_a_booking():
     listing_id = request.form['listing_id']
     start_date = request.form['start_date']
     end_date = request.form['end_date']
-    checkout_date = request.form['checkout_date']
+    checkout_date = date(2026, 1, 22)
     booking_price = request.form['booking_price']
+
+    print(guest_id)
 
 #Add validation here - e.g. User inputs past date
 

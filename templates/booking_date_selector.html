@@ -23,6 +23,7 @@
                 <form action="/book" method="POST">
                     
                     <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                    <input type="hidden" name="booking_price" value="{{ listing.price_per_night }}">
 
                     <div class="form-group">
                         <label for="start_date">Booking Start Date:</label>
