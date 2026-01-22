@@ -20,7 +20,7 @@
             <p>Price per night: £{{ listing.price_per_night }}</p>
 
             <div class="booking-container">
-                <form action="/bookings" method="POST">
+                <form action="/book" method="POST">
                     
                     <input type="hidden" name="listing_id" value="{{ listing.id }}">
 
