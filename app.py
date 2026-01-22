@@ -270,4 +270,4 @@ def select_booking_dates():
 # They also start the server configured to use the test database
 # if started in test mode.
 if __name__ == '__main__':
-    app.run(debug=True, port=int(os.environ.get('PORT', 5001)))
+    app.run(debug=True, port=int(os.environ.get('PORT', 5001)), host="0.0.0.0")
