@@ -64,6 +64,8 @@ def request_a_booking():
     checkout_date = request.form['checkout_date']
     booking_price = request.form['booking_price']
 
+#Add validation here - e.g. User inputs past date
+
     booking = Bookings (
         None,
         'Requested',
@@ -77,7 +79,6 @@ def request_a_booking():
 
     connection = get_flask_database_connection(app)
     booking_repo = BookingRepository(connection)
-
     booking_repo.create(booking)
 
     return "Your booking request has been submitted successfully.", 200
