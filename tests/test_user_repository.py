@@ -14,7 +14,7 @@ def test_get_all_users(db_connection):
 def test_get_user_from_email(db_connection):
     db_connection.seed("seeds/users_seeds.sql")
     repository = UserRepository(db_connection)
-    user = repository.get_user('sam@jones.com')
+    user = repository.find_by_email('sam@jones.com')
     assert user == User(2, 'Sam Jones', 'sam@jones.com', 'sam123')
 
 def test_get_user_password(db_connection):
@@ -41,7 +41,7 @@ def test_update_user_by_email(db_connection):
     repository = UserRepository(db_connection)
     user_to_update = User(None, 'Frederick Smith', 'fred@smith.com', 'newpass456')
     repository.update_user(user_to_update)
-    updated_user = repository.get_user('fred@smith.com')
+    updated_user = repository.find_by_email('fred@smith.com')
     assert updated_user.name == 'Frederick Smith'
     assert updated_user.password_hash == 'newpass456'
 

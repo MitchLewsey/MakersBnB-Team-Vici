@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}Listings{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,18 +14,35 @@
         <link rel="stylesheet" href="/static/style.css" >
     </head>
     <body>
-        <h1>Listings</h1>
-        <a href="/listings/new">Add Listing</a>
+          <div class="flex items-end justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold">Listings</h1>
+        </div>
+          </div>
+        <a href="/listings/new">Add Listing - Click here to list your property</a>
     {% for listing in listings %}
+        <br>
+        <br>
         <article>
-            <h2><a href="/listings/{{listing.id}}">{{listing.title}}</a></h2>
+            <h2 class="text-gray-900 font-bold"><a href="/listings/{{listing.id}}">{{listing.title}}</a></h2>
+                <br>
             <img id="listing main img" src="{{listing.img_url}}" alt="An image of the MakersBNB">
+            <br>
             <div>
-                Price per night: {{listing.price_per_night}}
-                County: {{listing.county}}
-                About this MakersBnB: {{listing.listing_description}}
+                <b>Price per night: </b>£{{listing.price_per_night}}
+            </div>    
+            <div>
+                <b>County:</b> {{listing.county}}
+            </div>  
+            <div>  
+                <b>About this MakersBnB:</b> {{listing.listing_description}}
             </div>
+               <div>
+            <a href="{{ url_for('select_booking_dates', id=listing.id) }}" class="btn">Book Here</a>
+            </div>
+            
         </article>
     {% endfor %}
     </body>
 </html>
+{% endblock %}
