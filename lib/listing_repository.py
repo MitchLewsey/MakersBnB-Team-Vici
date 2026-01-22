@@ -15,6 +15,8 @@ class ListingRepository():
     
     def find(self, id):
         rows = self._connection.execute('SELECT * FROM listings WHERE id = %s',[id])
+        if not rows:
+            return None
         return Listing(rows[0]["id"], rows[0]["owner_id"], rows[0]["title"], rows[0]["price_per_night"],rows[0]["county"], rows[0]["listing_description"],rows[0]["img_url"])
     
     def create(self, listing):

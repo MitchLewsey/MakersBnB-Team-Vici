@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Request to book{% endblock %}
+
+{% block content %}
+  <div class="max-w-3xl mx-auto">
+    <div class="flex items-start gap-4">
+      <div class="w-28 h-28 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+        {% if listing.img_url %}
+          <img src="{{ listing.img_url }}" alt="Photo of {{ listing.title }}" class="w-full h-full object-cover" />
+        {% else %}
+          <div class="w-full h-full flex items-center justify-center text-xs text-gray-500">No photo</div>
+        {% endif %}
+      </div>
+
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold">Request to book</h1>
+        <h2 class="text-lg font-semibold mt-1 truncate">{{ listing.title }}</h2>
+        <p class="text-gray-600 text-sm">{{ listing.county }}</p>
+        <p class="mt-2 text-sm">
+          <span class="font-semibold">£{{ listing.price_per_night }}</span>
+          <span class="text-gray-600">per night</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-6 bg-white border rounded-2xl p-5 shadow-sm">
+      <form action="/bookings" method="POST" class="space-y-4">
+        <input type="hidden" name="listing_id" value="{{ listing.id }}">
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="start_date">Check-in</label>
+          <input type="date" id="start_date" name="start_date" required class="w-full border rounded-xl px-3 py-2" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="end_date">Check-out</label>
+          <input type="date" id="end_date" name="end_date" required class="w-full border rounded-xl px-3 py-2" />
+        </div>
+
+        <div class="rounded-xl bg-gray-50 px-3 py-3 text-sm">
+        <div class="flex items-center justify-between">
+            <span class="text-gray-600">£<span id="ppn">{{ listing.price_per_night }}</span> × <span id="nights">0</span> nights</span>
+            <span class="font-semibold text-lg">£<span id="total">0.00</span></span>
+        </div>
+        <p class="text-xs text-gray-500 mt-1">Final price will be confirmed on submission.</p>
+        </div>
+
+        <button type="submit" class="w-full bg-black text-white py-2 rounded-xl hover:bg-gray-800">
+          Request booking
+        </button>
+
+        <p class="text-xs text-gray-500">
+          You won’t be charged until the owner approves — this sends a booking request.
+        </p>
+      </form>
+    </div>
+  </div>
+
+    <script>
+    const startEl = document.getElementById("start_date");
+    const endEl = document.getElementById("end_date");
+    const nightsEl = document.getElementById("nights");
+    const totalEl = document.getElementById("total");
+    const ppn = parseFloat(document.getElementById("ppn").textContent);
+
+    function toDate(value) {
+        const [y, m, d] = value.split("-").map(Number);
+        return new Date(y, m - 1, d);
+    }
+
+    function updateTotal() {
+        const startVal = startEl.value;
+        const endVal = endEl.value;
+
+        if (!startVal || !endVal) {
+        nightsEl.textContent = "0";
+        totalEl.textContent = "0.00";
+        return;
+        }
+
+        const start = toDate(startVal);
+        const end = toDate(endVal);
+
+        const msPerDay = 24 * 60 * 60 * 1000;
+        const nights = Math.round((end - start) / msPerDay);
+
+        if (nights <= 0) {
+        nightsEl.textContent = "0";
+        totalEl.textContent = "0.00";
+        return;
+        }
+
+        nightsEl.textContent = String(nights);
+        totalEl.textContent = (ppn * nights).toFixed(2);
+    }
+
+    startEl.addEventListener("change", updateTotal);
+    endEl.addEventListener("change", updateTotal);
+    </script>
+
+{% endblock %}
