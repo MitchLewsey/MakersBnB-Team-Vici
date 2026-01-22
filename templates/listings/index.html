@@ -30,18 +30,18 @@
             <img id="listing main img" src="{{listing.img_url}}" alt="An image of the MakersBNB">
             </a>
             <br>
-            <div>
+            <section>
                 <b>Price per night: </b>£{{listing.price_per_night}}
-            </div>    
-            <div>
+            </section>    
+            <section>
                 <b>County:</b> {{listing.county}}
-            </div>  
-            <div>  
+            </section>  
+            <section>  
                 <b>About this MakersBnB:</b> {{listing.listing_description}}
-            </div>
-               <div>
+            </section>
+               <section>
             <a href="{{ url_for('select_booking_dates', id=listing.id) }}" class="btn">Book Here</a>
-            </div>
+               </section>
             
         </article>
     {% endfor %}
