@@ -2,50 +2,71 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Login</title>
+    <title>Log in · ViciBnB</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
-  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-      <h1 class="text-2xl font-bold mb-6 text-center">Log in</h1>
+  <body class="min-h-screen flex flex-col md:flex-row">
 
-      <form method="post" action="/login" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            required
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            required
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring"
-          />
-        </div>
-
-        <button
-          type="submit"
-          class="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
-        >
-          Log in
-        </button>
-      </form>
-      <p class="text-sm text-gray-600 mt-6 text-center">
-        Don’t have an account?
-        <a href="/signup" class="underline">Sign up</a>
-      </p>
+    <div class="hidden md:flex md:w-1/2 bg-red-500 items-center justify-center px-12">
+      <div class="text-white max-w-md">
+        <h1 class="text-4xl font-extrabold mb-4">
+          Welcome back to ViciBnB
+        </h1>
+        <p class="text-lg text-red-100">
+          Discover unique stays, request bookings, and host with confidence.
+        </p>
+      </div>
     </div>
+
+    <div class="w-full md:w-1/2 bg-gray-50 flex items-center justify-center px-6">
+      <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
+
+        <h1 class="text-2xl font-bold mb-6 text-center">
+          Log in
+        </h1>
+
+        <form method="post" action="/login" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              class="w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring focus:ring-red-200"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              required
+              class="w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring focus:ring-red-200"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-black text-white py-2 rounded-xl hover:bg-gray-800 transition"
+          >
+            Log in
+          </button>
+        </form>
+
+        <p class="text-sm text-gray-600 mt-6 text-center">
+          Don’t have an account?
+          <a href="/signup" class="underline text-red-500 hover:text-red-600">
+            Sign up
+          </a>
+        </p>
+      </div>
+    </div>
+
   </body>
 </html>

@@ -11,6 +11,13 @@ from lib.user_repository import *
 # Create a new Flask app
 app = Flask(__name__)
 
+@app.context_processor
+def inject_user():
+    return {
+        "user_name": session.get("user_name"),
+        "user_id": session.get("user_id")
+    }
+
 app.secret_key = "dev-secret-change-me"
 
 def _parse_date(value: str) -> date:
@@ -60,18 +67,19 @@ def get_new_listing():
 # Creates listing and redirects to listings/<id> for the new listing
 @app.route('/listings/new', methods=['POST'])
 def create_listing():
+    if "user_id" not in session:
+        return redirect("/login")
+
     connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
 
-    # set the listing params
-    owner_id = request.form["owner_id"]
+    owner_id = session["user_id"]  # ✅ from session
     title = request.form["title"]
     price_per_night = request.form["price_per_night"]
     county = request.form["county"]
     listing_description = request.form["listing_description"]
     img_url = request.form["img_url"]
 
-    # create the listing object and pass into #create method 
     listing = Listing(None, owner_id, title, price_per_night, county, listing_description, img_url)
     listings_repo.create(listing)
 
@@ -105,6 +113,7 @@ def signup():
 
     session.clear()
     session["user_id"] = user.id
+    session["user_name"] = user.name
 
     return redirect("/listings")
 
@@ -124,11 +133,13 @@ def login():
         return "Missing username or password", 400
     
     connection = get_flask_database_connection(app)
-    rows = connection.execute("SELECT id FROM users WHERE email = %s AND password_hash = %s", [email, password])
+    rows = connection.execute("SELECT id, name FROM users WHERE email = %s AND password_hash = %s", [email, password])
 
     if len(rows) > 0:
         user_id = rows[0]["id"]
+        user_name = rows[0]["name"]
         session["user_id"] = user_id
+        session["user_name"] = user_name
         return redirect("/listings")
     else:
         return "Error: Invalid username or password", 401
@@ -174,16 +185,13 @@ def checkout_page(listing_id):
 def get_all_my_bookings():
     if "user_id" not in session:
         return redirect("/login")
-    
-    id = request.args.get('id')
-    
+
+    guest_id = session["user_id"]
     connection = get_flask_database_connection(app)
-    repository = BookingRepository(connection) 
-    
-    bookings = repository.find_by_guest_id(id)
-    
-    
-    return render_template('bookings.html', bookings = bookings), 200
+    repository = BookingRepository(connection)
+
+    bookings = repository.find_by_guest_id(guest_id)
+    return render_template('bookings.html', bookings=bookings), 200
 
 
 @app.route('/bookings', methods=['POST'])
@@ -221,10 +229,6 @@ def request_a_booking():
     price_per_night = float(listing.price_per_night)
     booking_price = round(price_per_night * nights, 2)
 
-    print(guest_id)
-
-#Add validation here - e.g. User inputs past date
-
     booking = Bookings (
         None,
         'Requested',
@@ -237,35 +241,21 @@ def request_a_booking():
     )
 
     booking_repo = BookingRepository(connection)
-    booking_repo.create(booking)
+    booking = booking_repo.create(booking)
 
-    return redirect("/bookings")
-
-# GET bookings/<id>
-# Returns the booking details page for that booking id
-@app.route('/bookings/<int:id>', methods=['GET'])
-def get_single_booking_id(id):
-    connection = get_flask_database_connection(app)
-    bookings_repo = BookingRepository(connection)
-    booking = bookings_repo.find_by_id(id)
-    if booking is None:
-        return "Sorry, that booking does not exist.", 404
-    else: 
-        return render_template('bookings/show_booking.html', booking=booking)
+    return redirect(f"/bookings/{booking.id}/confirmation")
     
-@app.route("/booking_confirmation", methods=["GET"])
-def booking_confirmation():
-    return render_template("bookings/booking_confirmation.html"), 200
+@app.route("/bookings/<int:booking_id>/confirmation")
+def booking_confirmation(booking_id):
+    if "user_id" not in session:
+        return redirect("/login")
 
-@app.get('/book')
-def select_booking_dates():
-    listing_id = request.args.get('id')
-    
     connection = get_flask_database_connection(app)
-    listing_repo = ListingRepository(connection)
-    listing = listing_repo.find(listing_id) 
+    repo = BookingRepository(connection)
 
-    return render_template('booking_date_selector.html', listing = listing)
+    booking = repo.find_receipt(booking_id) 
+    return render_template("booking_confirmation.html", booking=booking), 200
+
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database

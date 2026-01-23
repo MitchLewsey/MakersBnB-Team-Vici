@@ -2,31 +2,43 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}MakersBnB{% endblock %}</title>
+    <title>{% block title %}ViciBnB{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
+
   <body class="bg-gray-50 min-h-screen">
-    <nav class="bg-white border-b">
+    <nav class="bg-white border-b border-red-100">
       <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         
-        <a href="/listings" class="text-lg font-bold">
-          MakersBnB
+        <!-- Brand -->
+        <a href="/listings" class="text-lg font-bold text-red-500">
+          ViciBnB
         </a>
 
+        <!-- Right side -->
         <div class="flex items-center gap-6 text-sm">
           <a href="/listings" class="hover:underline">Listings</a>
           <a href="/bookings" class="hover:underline">My bookings</a>
           <a href="/hostings" class="hover:underline">My hostings</a>
 
+  
+
+        {% if user_id %}
           <form method="post" action="/logout">
-            <button class="hover:underline">Logout</button>
+            <button class="hover:underline text-red-500">Logout</button>
           </form>
+        {% else %}
+          <a href="/login" class="hover:underline text-red-500">Log in</a>
+        {% endif %}
+       </div>
+
+
         </div>
       </div>
     </nav>
+
     <main class="max-w-6xl mx-auto px-6 py-8">
       {% block content %}{% endblock %}
     </main>
-
   </body>
 </html>

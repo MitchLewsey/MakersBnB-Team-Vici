@@ -14,7 +14,7 @@ def test_bookings_class_is_setup():
     assert booking.start_date == date(2026, 1, 11)
     assert booking.end_date == date(2026, 1, 12)
     assert booking.checkout_date == date(2026, 1, 8)
-    assert booking.price == Decimal("150.00")
+    assert booking.booking_price == Decimal("150.00")
 
 """
 
