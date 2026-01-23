@@ -4,7 +4,6 @@ class ListingRepository():
     def __init__(self, connection):
         self._connection = connection
 
-
     def all(self):
         rows = self._connection.execute('SELECT * FROM listings')
         listings = []
