@@ -19,16 +19,7 @@
             </p>
           </div>
 
-          <div class="text-right">
-            <div class="text-xs text-gray-500">Status</div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 text-red-700 text-sm font-semibold">
-              {% if booking and booking.status %}
-                {{ booking.status }}
-              {% else %}
-                Requested
-              {% endif %}
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -124,7 +115,7 @@
     </div>
 
     <p class="text-xs text-gray-400 text-center mt-4">
-      Stripe Payments coming soon
+      *Stripe Payments coming soon*
     </p>
   </div>
 {% endblock %}
