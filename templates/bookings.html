@@ -18,18 +18,18 @@
     <body>
         <div> 
             <h1>My Bookings</h1>
-            <p> All booking requests that you have made</p>
+            <p> Requested and Confirmed Bookings</p>
             </div> 
-        
-        {% if bookings|length == 0 %}
+        <h2>Requested Bookings</h2>
+        {% if requested_bookings|length == 0 %}
         <div class="text-center py-16">
-  <p class="text-gray-700 text-lg mb-4">You have made no bookings.</p>
+  <p class="text-gray-700 text-lg mb-4">No requests in progess</p>
   <a href="/listings" class="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition duration-200">
     Browse Listings
   </a>
 </div>
         {% else %}
-        {% for booking in bookings %}
+        {% for booking in requested_bookings %}
         <div>
             <div>
                 <h2><a href="/bookings/{{booking.id}}">{{booking.title}}</a></h2>
@@ -48,4 +48,32 @@
         {% endif %}
     </body>
 </html>
+
+<h2> Confirmed Bookings</h2>
+{% if confirmed_bookings|length == 0 %}
+        <div class="text-center py-16">
+  <p class="text-gray-700 text-lg mb-4">No confirmed bookings</p>
+</div>
+        {% else %}
+        {% for booking in confirmed_bookings %}
+        <div>
+            <div>
+                <h2><a href="/bookings/{{booking.id}}">{{booking.title}}</a></h2>
+                <img id="listing_img" src="{{booking.img_url}}" alt="Listing image">
+            </div> 
+            <div>
+                Order Id: {{booking.id}}
+                Total Fee: £{{booking.booking_price}}
+                Address: {{booking.county}}
+                About this MakersBnB: {{booking.listing_description}}
+                Start Date: {{booking.start_date}}
+                End Date: {{booking.end_date}}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </body>
+</html>
+
+
 {% endblock %}

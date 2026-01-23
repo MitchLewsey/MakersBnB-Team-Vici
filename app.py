@@ -149,7 +149,8 @@ def hostings():
     connection = get_flask_database_connection(app)
     booking_repo = BookingRepository(connection)
 
-    hostings = booking_repo.hostings_for_host(user_id)
+    requested_hostings = booking_repo.requested_hostings_for_host(user_id)
+    confirmed_hostings = booking_repo.confirmed_hostings_for_host(user_id)
 
     return render_template("hostings.html", hostings = hostings), 200
 
@@ -180,10 +181,12 @@ def get_all_my_bookings():
     connection = get_flask_database_connection(app)
     repository = BookingRepository(connection) 
     
-    bookings = repository.find_by_guest_id(id)
+    confirmed_bookings = repository.find_confirmed_bookings_for_guest(id)
+    requested_bookings = repository.find_requested_bookings_for_guest(id)
+    rejected_bookings = repository.find_rejected_bookings_for_guest(id)
     
     
-    return render_template('bookings.html', bookings = bookings), 200
+    return render_template('bookings.html', confirmed_bookings = confirmed_bookings, requested_bookings=requested_bookings, rejected_bookings=rejected_bookings), 200
 
 
 @app.route('/bookings', methods=['POST'])

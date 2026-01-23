@@ -113,3 +113,115 @@ class BookingRepository():
             [listing_id]
         )
         return rows
+    
+    ##Status feature queries
+
+    def find_confirmed_bookings_for_guest(self, guest_id):
+        bookings_table = self._connection.execute(""" SELECT
+            l.title,
+            l.img_url,
+            l.listing_description,
+            l.county,
+            b.id,
+            b.guest_id,
+            b.start_date,
+            b.end_date,
+            b.checkout_date,
+            b.booking_price
+            FROM bookings AS b
+            JOIN listings AS l ON b.listing_id = l.id
+            WHERE b.guest_id = %s and b.status='Approved'
+            ORDER by b.id;      
+        """,[guest_id])
+        return bookings_table
+    
+    def find_requested_bookings_for_guest(self, guest_id):
+        bookings_table = self._connection.execute(""" SELECT
+            l.title,
+            l.img_url,
+            l.listing_description,
+            l.county,
+            b.id,
+            b.guest_id,
+            b.start_date,
+            b.end_date,
+            b.checkout_date,
+            b.booking_price
+            FROM bookings AS b
+            JOIN listings AS l ON b.listing_id = l.id
+            WHERE b.guest_id = %s and b.status='Requested'
+            ORDER by b.id;      
+        """,[guest_id])
+        return bookings_table
+    
+    def find_rejected_bookings_for_guest(self, guest_id):
+        bookings_table = self._connection.execute(""" SELECT
+            l.title,
+            l.img_url,
+            l.listing_description,
+            l.county,
+            b.id,
+            b.guest_id,
+            b.start_date,
+            b.end_date,
+            b.checkout_date,
+            b.booking_price
+            FROM bookings AS b
+            JOIN listings AS l ON b.listing_id = l.id
+            WHERE b.guest_id = %s and b.status='Rejected'
+            ORDER by b.id;      
+        """,[guest_id])
+        return bookings_table
+
+
+##Status Feature Functions
+
+    def confirmed_hostings_for_host(self, owner_id):
+        return self._connection.execute(
+            """
+            SELECT
+            b.id AS booking_id,
+            b.start_date,
+            b.end_date,
+            b.checkout_date,
+            b.booking_price,
+            l.id AS listing_id,
+            l.title AS listing_title,
+            l.county AS listing_county,
+            l.img_url AS listing_img_url,            
+            u.id AS guest_id,
+            u.name AS guest_name,
+            u.email AS guest_email
+            FROM bookings b
+            JOIN listings l ON l.id = b.listing_id
+            JOIN users u ON u.id = b.guest_id
+            WHERE l.owner_id = %s and b.status = 'Approved'
+            ORDER BY b.id;
+            """,
+            [owner_id]
+        )
+    
+    def requested_hostings_for_host(self, owner_id):
+        return self._connection.execute(
+            """
+            SELECT
+            b.id AS booking_id,
+            b.start_date,
+            b.end_date,
+            b.checkout_date,
+            b.booking_price,
+            l.id AS listing_id,
+            l.title AS listing_title,
+            l.county AS listing_county,
+            l.img_url AS listing_img_url,            
+            u.id AS guest_id,
+            u.name AS guest_name,
+            u.email AS guest_email
+            FROM bookings b
+            JOIN listings l ON l.id = b.listing_id
+            JOIN users u ON u.id = b.guest_id
+            WHERE l.owner_id = %s and b.status='Requested'
+            ORDER BY b.id;
+            """,
+            [owner_id]
+        )

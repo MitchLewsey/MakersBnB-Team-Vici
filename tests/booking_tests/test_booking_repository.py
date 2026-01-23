@@ -97,3 +97,100 @@ def test_get_booking_information_by_guest_id(db_connection):
             "booking_price": Decimal("50.00")
         }
     ]
+
+def test_find_confirmed_bookings_for_guest(db_connection):
+    db_connection.seed("seeds/users_seeds.sql")
+    db_connection.seed("seeds/listings_seeds.sql")
+    db_connection.seed("seeds/bookings_seeds.sql")
+
+    repository = BookingRepository(db_connection)
+
+    response = repository.find_confirmed_bookings_for_guest(2)
+
+    assert response == [
+        {
+            "title": "15 bed castle",
+            "img_url": "https://tinyurl.com/mpm6dnam",
+            "listing_description": "huge castle, tennis courts",
+            "county": "Edinburgh",
+            "id": 2,
+            "guest_id": 2,
+            "start_date": date(2026, 1, 28),
+            "end_date": date(2026, 1, 29),
+            "checkout_date": date(2026, 1, 15),
+            "booking_price": Decimal("77.00")
+        }
+    ]
+
+def test_find_requested_bookings_for_guest(db_connection):
+    db_connection.seed("seeds/users_seeds.sql")
+    db_connection.seed("seeds/listings_seeds.sql")
+    db_connection.seed("seeds/bookings_seeds.sql")
+
+    repository = BookingRepository(db_connection)
+
+    response = repository.find_requested_bookings_for_guest(1)
+
+    assert response == [
+        {
+            "title": "40 bed castle",
+            "img_url": "https://tinyurl.com/mpm6dnam",
+            "listing_description": "huge castle, tennis courts",
+            "county": "Edinburgh",
+            "id": 1,
+            "guest_id": 1,
+            "start_date": date(2026, 1, 20),
+            "end_date": date(2026, 1, 21),
+            "checkout_date": date(2026, 1, 20),
+            "booking_price": Decimal("50.00")
+        },
+        {
+            "title": "40 bed castle",
+            "img_url": "https://tinyurl.com/mpm6dnam",
+            "listing_description": "huge castle, tennis courts",
+            "county": "Edinburgh",
+            "id": 4,
+            "guest_id": 1,
+            "start_date": date(2026, 1, 25),
+            "end_date": date(2026, 1, 26),
+            "checkout_date": date(2026, 1, 19),
+            "booking_price": Decimal("50.00")
+        }
+    ]
+
+def test_find_rejected_bookings_for_guest_returns_empty_list(db_connection):
+    db_connection.seed("seeds/users_seeds.sql")
+    db_connection.seed("seeds/listings_seeds.sql")
+    db_connection.seed("seeds/bookings_seeds.sql")
+
+    repository = BookingRepository(db_connection)
+
+    response = repository.find_rejected_bookings_for_guest(1)
+
+    assert response == []
+
+def test_confirmed_hostings_for_host(db_connection):
+    db_connection.seed("seeds/users_seeds.sql")
+    db_connection.seed("seeds/listings_seeds.sql")
+    db_connection.seed("seeds/bookings_seeds.sql")
+
+    repository = BookingRepository(db_connection)
+
+    response = repository.confirmed_hostings_for_host(1)
+
+    assert response == [
+        {
+            "booking_id": 3,
+            "start_date": date(2026, 2, 10),
+            "end_date": date(2026, 2, 11),
+            "checkout_date": date(2026, 1, 18),
+            "booking_price": Decimal("100.00"),
+            "listing_id": 1,
+            "listing_title": "2 bed apartment",
+            "listing_county": "Hertfordshire",
+            "listing_img_url": "https://tinyurl.com/ye23e59b",
+            "guest_id": 3,
+            "guest_name": "Matthew Wiggans",
+            "guest_email": "matthew@wiggans.com"
+        }
+    ]
