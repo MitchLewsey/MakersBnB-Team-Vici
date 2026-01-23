@@ -1,31 +1,23 @@
-from playwright.sync_api import Page, expect
-from lib.database_connection import get_flask_database_connection
+from datetime import date
+import pytest
 
-
-
-"""
-Get listing by ID returns only the given list
-"""
-
-
-def test_get_booking_by_id(db_connection, page, test_web_address):
+def seed_all(db_connection):
+    db_connection.seed("seeds/users_seeds.sql")
     db_connection.seed("seeds/listings_seeds.sql")
     db_connection.seed("seeds/bookings_seeds.sql")
-    
-    page.goto(f"http://{test_web_address}/bookings?id=1")
-    page.click("text=40 bed castle")
-    h1_tags = page.locator("h1")
-    expect(h1_tags).to_have_text("Booking Details")
-    h2_tags = page.locator("h2")
-    # expect(h2_tags).to_have_text(
-    #     "40 bed castle"
-    # )
 
-    """get booking confirmation"""
+def login_as(web_client, email, password):
+    return web_client.post("/login", data={"email": email, "password": password}, follow_redirects=False)
 
-def test_get_booking_confirmation(db_connection, page, test_web_address):
-        db_connection.seed("seeds/bookings_seeds.sql")
+def test_get_bookings_shows_only_logged_in_users_bookings(web_client, db_connection):
+    seed_all(db_connection)
 
-        page.goto(f"http://{test_web_address}/booking_confirmation")
-        confirmation_message = page.locator("p")
-        expect(confirmation_message).to_have_text("Your booking request has been successful")
+    login_as(web_client, "fred@smith.com", "fred123")
+
+    response = web_client.get("/bookings")
+    assert response.status_code == 200
+
+    body = response.data.decode()
+
+    assert "My bookings" in body
+    assert "40 bed castle" in body 

@@ -75,7 +75,7 @@ class BookingRepository():
                 booking.start_date, 
                 booking.end_date,      
                 booking.checkout_date, 
-                booking.price          
+                booking.booking_price          
             ]
             )
 
@@ -113,3 +113,26 @@ class BookingRepository():
             [listing_id]
         )
         return rows
+    def find_receipt(self, booking_id):
+        rows = self._connection.execute(
+            """
+            SELECT
+                b.id,
+                b.status,
+                b.guest_id,
+                b.listing_id,
+                b.start_date,
+                b.end_date,
+                b.checkout_date,
+                b.booking_price,
+                l.title,
+                l.county,
+                l.img_url,
+                l.listing_description
+            FROM bookings b
+            JOIN listings l ON l.id = b.listing_id
+            WHERE b.id = %s;
+            """,
+            [booking_id]
+        )
+        return rows[0] if rows else None
