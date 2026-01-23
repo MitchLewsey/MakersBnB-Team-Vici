@@ -26,6 +26,3 @@ class ListingRepository():
         
         listing.id = rows[0]["id"]
         return listing
-
-
-

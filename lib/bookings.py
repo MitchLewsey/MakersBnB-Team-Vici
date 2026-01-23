@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
 class Bookings():
-    def __init__(self,id,status,guest_id,listing_id,start_date,end_date,checkout_date,price): 
+    def __init__(self,id,status,guest_id,listing_id,start_date,end_date,checkout_date,booking_price): 
         self.id = id
         self.status = status
         self.guest_id = guest_id
@@ -9,12 +9,7 @@ class Bookings():
         self.start_date = start_date
         self.end_date = end_date
         self.checkout_date = checkout_date
-        self.price = price
+        self.booking_price = booking_price
 
     def __eq__(self, value):
         return self.__dict__ == value.__dict__
-    
-
-    # def calculate_price(start_date,end_date,ppn):
-    #     start_date_obj = datetime.strptime(start_date, "%Y-%m-%d").date()
-    #     end_date_obj = datetime.strptime(end_date, "%Y-%m-%d").date()
