@@ -270,6 +270,11 @@ def select_booking_dates():
 
     return render_template('booking_date_selector.html', listing = listing)
 
+#Updates booking status to reject
+@app.post('/reject_booking')
+def host_rejects_booking():
+    
+
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
 # if started in test mode.
