@@ -8,8 +8,19 @@ from lib.bookings import *
 from lib.user_repository import *
 
 
+
 # Create a new Flask app
 app = Flask(__name__)
+
+if os.environ.get("APP_ENV") == "PRODUCTION":
+    conn = DatabaseConnection()
+    conn.connect()
+    conn.seed("seeds/users_seeds.sql")
+    conn.seed("seeds/listings_seeds.sql")
+    conn.seed("seeds/bookings_seeds.sql") 
+
+connection = DatabaseConnection()
+connection.connect()
 
 app.secret_key = "dev-secret-change-me"
 
@@ -31,7 +42,7 @@ def get_index():
 # Returns the listings index
 @app.route('/listings', methods=['GET'])
 def get_all_listings():
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
     listings = listings_repo.all()
     return render_template('listings/index.html', listings=listings)
@@ -40,7 +51,7 @@ def get_all_listings():
 # Returns the listing details page for that listing id
 @app.route('/listings/<id>', methods=['GET'])
 def get_single_listing(id):
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
     listing = listings_repo.find(id)
     if listing is None:
@@ -59,7 +70,7 @@ def get_new_listing():
 # Creates listing and redirects to listings/<id> for the new listing
 @app.route('/listings/new', methods=['POST'])
 def create_listing():
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
 
     # set the listing params
@@ -86,7 +97,7 @@ def signup_page():
 
 @app.route("/signup", methods=["POST"])
 def signup():
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     user_repo = UserRepository(connection)
 
     name = request.form.get("name")
@@ -122,7 +133,7 @@ def login():
     if not email or not password:
         return "Missing username or password", 400
     
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     rows = connection.execute("SELECT id FROM users WHERE email = %s AND password_hash = %s", [email, password])
 
     if len(rows) > 0:
@@ -145,7 +156,7 @@ def hostings():
     if not user_id:
         return redirect("/login")
 
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     booking_repo = BookingRepository(connection)
 
     hostings = booking_repo.hostings_for_host(user_id)
@@ -158,7 +169,7 @@ def checkout_page(listing_id):
     if "user_id" not in session:
         return redirect("/login")
 
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     listing_repo = ListingRepository(connection)
 
     listing = listing_repo.find(listing_id)
@@ -176,7 +187,7 @@ def get_all_my_bookings():
     
     id = request.args.get('id')
     
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     repository = BookingRepository(connection) 
     
     bookings = repository.find_by_guest_id(id)
@@ -208,7 +219,7 @@ def request_a_booking():
     
     checkout_date = date.today()
 
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
 
     listing_repo = ListingRepository(connection)
     listing = listing_repo.find(int(listing_id))
@@ -244,7 +255,7 @@ def request_a_booking():
 # Returns the booking details page for that booking id
 @app.route('/bookings/<int:id>', methods=['GET'])
 def get_single_booking_id(id):
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     bookings_repo = BookingRepository(connection)
     booking = bookings_repo.find_by_id(id)
     if booking is None:
@@ -260,7 +271,7 @@ def booking_confirmation():
 def select_booking_dates():
     listing_id = request.args.get('id')
     
-    connection = get_flask_database_connection(app)
+    # connection = get_flask_database_connection(app)
     listing_repo = ListingRepository(connection)
     listing = listing_repo.find(listing_id) 
 
@@ -270,4 +281,7 @@ def select_booking_dates():
 # They also start the server configured to use the test database
 # if started in test mode.
 if __name__ == '__main__':
-    app.run(debug=True, port=int(os.environ.get('PORT', 5001)), host="0.0.0.0")
+    if os.environ.get("APP_ENV") == "PRODUCTION":
+        app.run(port=int(os.environ.get('PORT', 5001)), host="0.0.0.0")
+    else:
+        app.run(debug=True, port=int(os.environ.get('PORT', 5001)))

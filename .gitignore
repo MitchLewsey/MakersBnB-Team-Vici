@@ -6,3 +6,5 @@ screenshot.png
 *makersbnb-venv*
 *venv*
 seed_dev_database.py
+.DS_Store
+deploy.sh
