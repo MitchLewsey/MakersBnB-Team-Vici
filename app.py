@@ -38,6 +38,8 @@ def get_index():
 # Returns the listings index
 @app.route('/listings', methods=['GET'])
 def get_all_listings():
+    if "user_id" not in session:
+        return redirect("/login")
     connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
     listings = listings_repo.all()
@@ -47,6 +49,8 @@ def get_all_listings():
 # Returns the listing details page for that listing id
 @app.route('/listings/<id>', methods=['GET'])
 def get_single_listing(id):
+    if "user_id" not in session:
+        return redirect("/login")
     connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
     listing = listings_repo.find(id)
@@ -60,6 +64,8 @@ def get_single_listing(id):
 # Returns the new listings page
 @app.route('/listings/new', methods=['GET'])
 def get_new_listing():
+    if "user_id" not in session:
+        return redirect("/login")
     return render_template('listings/new.html')
 
     
@@ -67,13 +73,11 @@ def get_new_listing():
 # Creates listing and redirects to listings/<id> for the new listing
 @app.route('/listings/new', methods=['POST'])
 def create_listing():
-    if "user_id" not in session:
-        return redirect("/login")
 
     connection = get_flask_database_connection(app)
     listings_repo = ListingRepository(connection)
 
-    owner_id = session["user_id"]  # ✅ from session
+    owner_id = session["user_id"]
     title = request.form["title"]
     price_per_night = request.form["price_per_night"]
     county = request.form["county"]
