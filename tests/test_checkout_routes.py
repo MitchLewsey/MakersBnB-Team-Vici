@@ -30,8 +30,8 @@ def test_checkout_page_renders_listing_details_when_logged_in(web_client, db_con
 
     html = response.data.decode("utf-8")
     assert "Request to book" in html
-    assert "2 bed apartment" in html  # listing title from seeds
-    assert "Hertfordshire" in html    # county from seeds
+    assert "2 bed apartment" in html  
+    assert "Hertfordshire" in html    
 
 
 def test_post_bookings_creates_booking_request(web_client, db_connection):

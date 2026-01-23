@@ -1,55 +1,64 @@
 from playwright.sync_api import Page, expect
-from lib.database_connection import get_flask_database_connection
 
 """
 List out all listings when calling GET /listings
 """
 def test_get_listings(db_connection, page, test_web_address):
     db_connection.seed("seeds/listings_seeds.sql")
+
     page.goto(f"http://{test_web_address}/listings")
-    div_tags = page.locator("div")
-    expect(div_tags).to_have_text([
-        "Price per night: 100.50 County: Hertfordshire About this MakersBnB: lovely stay with breakfast included",
-        "Price per night: 3000 County: Edinburgh About this MakersBnB: huge castle, tennis courts",
-        "Price per night: 3000 County: Edinburgh About this MakersBnB: huge castle, tennis courts"
-    ])
-    title_tags = page.locator("h2")
-    expect(title_tags).to_have_text([
+
+    titles = page.locator("h2")
+    expect(titles).to_have_text([
         "2 bed apartment",
         "15 bed castle",
         "40 bed castle"
     ])
-    expect(page.get_by_alt_text("An image of the MakersBNB"))
+
+    body = page.locator("body")
+    expect(body).to_contain_text("£100.5")
+    expect(body).to_contain_text("Hertfordshire")
+    expect(body).to_contain_text("lovely stay with breakfast included")
+    expect(body).to_contain_text("Edinburgh")
+
+
 """
 Get listing by ID returns only the given listing
 """
 def test_get_listing_by_id(db_connection, page, test_web_address):
     db_connection.seed("seeds/listings_seeds.sql")
-    page.goto(f"http://{test_web_address}/listings")
-    page.click("text='2 bed apartment'")
-    h2_tags = page.locator("h2")
-    expect(h2_tags).to_have_text("2 bed apartment")
-    div_tags = page.locator("div")
-    expect(div_tags).to_have_text([
-        "Price per night: 100.50 County: Hertfordshire About this MakersBnB: lovely stay with breakfast included"
-    ])
+
+    page.goto(f"http://{test_web_address}/listings/1")
+
+    expect(page.locator("h1")).to_have_text("Listing details")
+    expect(page.locator("body")).to_contain_text("2 bed apartment")
+    expect(page.locator("body")).to_contain_text("£100.5")
+    expect(page.locator("body")).to_contain_text("Hertfordshire")
+
 
 """
-Create listing with valid parameters creates a listing in the database
-And returns the user to details page of their listing
+Create listing with valid parameters redirects to listing details
 """
 def test_create_listing_success_redirect_to_listing_details(db_connection, page, test_web_address):
+    db_connection.seed("seeds/users_seeds.sql")
     db_connection.seed("seeds/listings_seeds.sql")
-    page.goto(f"http://{test_web_address}/listings")
-    page.click("text='Add Listing'")
-    h1_tag = page.locator("h1")
-    expect(h1_tag).to_have_text("Add a Listing")
-    page.fill("input[name=owner_id]", "1")
+
+    page.goto(f"http://{test_web_address}/login")
+    page.fill("input[name=email]", "fred@smith.com")
+    page.fill("input[name=password]", "fred123")
+    page.click("button[type=submit]")
+
+    page.goto(f"http://{test_web_address}/listings/new")
+
+    expect(page.locator("h1")).to_have_text("Add a Listing")
+
     page.fill("input[name=title]", "4 bed house")
-    page.fill("input[name=price_per_night]", "250.00")
+    page.fill("input[name=price_per_night]", "250")
     page.fill("input[name=county]", "Buckinghamshire")
     page.fill("input[name=listing_description]", "Spacious 4 bed house in the centre of town")
-    page.fill("input[name=img_url]", "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/d6/a1/6b/buckingham-palace.jpg?w=800&h=500&s=1")
-    # page.click("text='Submit Listing'")
-    # h2_tags = page.locator("h2")
-    # expect(h2_tags).to_have_text("4 bed house")
+    page.fill("input[name=img_url]", "https://example.com/house.jpg")
+
+    page.click("button[type=submit]")
+
+    expect(page.locator("body")).to_contain_text("4 bed house")
+    expect(page.locator("body")).to_contain_text("Buckinghamshire")

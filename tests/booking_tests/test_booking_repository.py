@@ -47,7 +47,7 @@ def test_create_a_booking(db_connection):
     start_date=date(2026, 3, 10),
     end_date=date(2026, 3, 11),
     checkout_date=date(2026, 1, 31),
-    price=Decimal("85.00")
+    booking_price=Decimal("85.00")
     )
 
     create_booking = repository.create(booking)
