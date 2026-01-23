@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Error Page</title>
+        <!--
+            Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
+            If you're wondering how the CSS file below is being loaded.
+        -->
+        <link rel="stylesheet" href="/static/style.css" >
+    </head>
+    <body>
+          <div class="flex items-end justify-between mb-6">
+        <article>    
+        <section>Whoops, something went wrong there. Sorry about that!</section>
+        <section>It appears the listing you were searching for doesn't exist.</section>
+        <section>Click <a href = "/listings"><b>here</b></a> to return to the Listings page.</section>
+    </article>
+    </body>
+</html>
+{% endblock %}
